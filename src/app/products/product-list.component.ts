@@ -1,18 +1,22 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 
 import { ProductService } from '../service/product.service';
 
 import { IProduct } from '../interface/product';
+import { CriteriaComponent } from '../shared/criteria/criteria.component';
 
 @Component({
   selector: 'app-product-list',
   templateUrl: './product-list.component.html',
   styleUrls: ['./product-list.component.less']
 })
-export class ProductListComponent implements OnInit {
+export class ProductListComponent implements OnInit, AfterViewInit {
 	pageTitle: string = 'Product List';
   // listFilter: string;
   showImage: boolean;
+  includeDetail: boolean = true;
+  @ViewChild(CriteriaComponent) filterComponent: CriteriaComponent;
+  parentListFilter: string;
 
   imageWidth: number = 50;
   imageMargin: number = 2;
@@ -33,11 +37,15 @@ export class ProductListComponent implements OnInit {
 
   constructor(private productService: ProductService) { }
 
+  ngAfterViewInit(): void {
+    this.parentListFilter = this.filterComponent.listFilter;
+  }
+
   ngOnInit(): void {
   	this.productService.getProducts().subscribe(
         (products: IProduct[]) => {
             this.products = products;
-            this.performFilter();
+            this.performFilter(this.parentListFilter);
         },
         (error: any) => this.errorMessage = <any>error
     );
@@ -48,6 +56,9 @@ export class ProductListComponent implements OnInit {
     this.performFilter(this.listFilter);
   }
 
+  OnValueChange(value: string) : void{
+    this.performFilter(value);
+  }
 
   toggleImage(): void {
       this.showImage = !this.showImage;

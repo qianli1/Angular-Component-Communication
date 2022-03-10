@@ -6,7 +6,10 @@
     <div class='panel-body'>
       <!-- Filter by the Title   -->
       <div class='row'>
-        <app-criteria class='col-md-10'>
+        <app-criteria #filterCriteria class='col-md-10'
+        [displayDetail]='includeDetail'
+        [hitCount]='filteredProducts?.length'
+        (valueChange)='OnValueChange($event)'>
         </app-criteria>
 
       </div>
