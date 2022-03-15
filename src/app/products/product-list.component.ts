@@ -56,7 +56,7 @@ export class ProductListComponent implements OnInit, AfterViewInit {
   	this.productService.getProducts().subscribe(
         (products: IProduct[]) => {
             this.products = products;
-            this.performFilter(this.parentListFilter);
+            this.filterComponent.listFilter = this.productParameterService.filterBy;
         },
         (error: any) => this.errorMessage = <any>error
     );
@@ -68,6 +68,7 @@ export class ProductListComponent implements OnInit, AfterViewInit {
   }
 
   OnValueChange(value: string) : void{
+    this.productParameterService.filterBy = value;
     this.performFilter(value);
   }
 
